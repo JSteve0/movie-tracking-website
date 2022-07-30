@@ -89,6 +89,19 @@
           </a>
         </v-row>
       </v-col>
+
+      <v-col
+          class="mb-5"
+          cols="12"
+      >
+        <h2 class="headline font-weight-bold mb-5">
+          Custom Pages
+        </h2>
+
+        <v-row justify="center">
+          <router-link to="/about">about</router-link>
+        </v-row>
+      </v-col>
     </v-row>
   </v-container>
 </template>
