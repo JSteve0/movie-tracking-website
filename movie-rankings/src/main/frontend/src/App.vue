@@ -1,18 +1,18 @@
 <template>
   <v-app>
-    <v-main>
-      <router-view/>
-    </v-main>
+    <nav-bar/>
+    <router-view/>
   </v-app>
 </template>
 
+<style lang="scss">
+  //fixes navbar
+  html { overflow-y: auto }
+</style>
+
 <script>
-
+import NavBar from "@/components/NavBar";
 export default {
-  name: 'App',
-
-  data: () => ({
-    //
-  }),
+  components: {NavBar}
 }
 </script>
