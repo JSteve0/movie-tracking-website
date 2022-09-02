@@ -21,17 +21,29 @@ public class UserController {
 
     @GetMapping("/find-all")
     List<User> findAll() {
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+        users.forEach(user -> user.setPassword(""));
+        return users;
     }
 
     @GetMapping("/find-by-username/{username}")
     User findByUsername(@PathVariable("username") String username) {
-        return userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
+        user.setPassword("");
+        return user;
     }
 
     @GetMapping("/find-by-email/{email}")
     User findByEmail(@PathVariable("email") String email) {
-        return userRepository.findByUsername(email);
+        User user = userRepository.findByEmail(email);
+        user.setPassword("");
+        return user;
+    }
+
+    @GetMapping("/find-by-email/{emailOrUsername}/{password}")
+    boolean login(@PathVariable("email") String email) {
+        User user = userRepository.findByEmail(email);
+        return false;
     }
 
     @PostMapping("/create-user")

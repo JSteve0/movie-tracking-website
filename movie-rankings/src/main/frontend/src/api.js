@@ -8,6 +8,10 @@ export default {
 
     async createUser(user) {
         return axios.post('http://localhost:8081/api/user/create-user', user);
+    },
+
+    async login(emailOrUsername, password) {
+        return axios.post('');
     }
 
 }
