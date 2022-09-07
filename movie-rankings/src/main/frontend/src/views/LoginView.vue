@@ -42,29 +42,44 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      email: "",
-      password: ""
-    }
-  },
+  import api from '../api.js'
 
-  created() {
+  export default {
+    data() {
+      return {
+        email: "",
+        password: ""
+      }
+    },
 
-  },
+    created() {
 
-  computed: {
-    checkFields() {
-      return !(this.email !== "" && this.password !== "");
-    }
-  },
+    },
 
-  methods: {
-    login() {
-      console.log(this.email);
-      console.log(this.password);
+    computed: {
+      checkFields() {
+        return !(this.email !== "" && this.password !== "");
+      }
+    },
+
+    methods: {
+      async login() {
+        let response = await api.login(this.email, this.password);
+        if (response.status !== 200) {
+          console.log("error: " + response.data);
+        } else {
+          console.log(response.data);
+          this.$loggedIn = true;
+          console.log(this.$loggedIn);
+          setTimeout(() => {
+            this.redirect('/')
+          }, 1000)
+        }
+      },
+
+      redirect(link) {
+        this.$router.push(link);
+      }
     }
   }
-}
 </script>

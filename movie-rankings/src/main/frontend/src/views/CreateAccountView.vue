@@ -95,12 +95,6 @@
 
     methods: {
       async createAccount() {
-        //Check unique username
-        //Check unique email
-        console.log(this.username);
-        console.log(this.email);
-        console.log(this.password);
-        console.log(this.confirmPassword);
         await api.createUser({
           email: this.email,
           password: this.password,

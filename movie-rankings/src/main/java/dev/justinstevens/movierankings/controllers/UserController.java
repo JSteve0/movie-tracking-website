@@ -2,13 +2,14 @@ package dev.justinstevens.movierankings.controllers;
 
 import dev.justinstevens.movierankings.documents.User;
 import dev.justinstevens.movierankings.repositories.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/api/user")
 @RestController
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserRepository userRepository;
@@ -40,17 +41,46 @@ public class UserController {
         return user;
     }
 
-    @GetMapping("/find-by-email/{emailOrUsername}/{password}")
-    boolean login(@PathVariable("email") String email) {
-        User user = userRepository.findByEmail(email);
-        return false;
+    @GetMapping("/login")
+    ResponseEntity<String> login(
+            @RequestParam String emailOrUsername,
+            @RequestParam String password)
+    {
+        User userFromEmail = userRepository.findByEmail(emailOrUsername);
+        User userFromUsername = userRepository.findByUsername(emailOrUsername);
+
+        if (userFromEmail != null) {
+            if (passwordEncoder.matches(password, userFromEmail.getPassword())) {
+                return ResponseEntity.ok("Logged in, hello " + userFromEmail.getUsername());
+            } else {
+                return ResponseEntity.badRequest().body("Password incorrect");
+            }
+        } else if (userFromUsername != null) {
+            if (passwordEncoder.matches(password, userFromUsername.getPassword())) {
+                return ResponseEntity.ok("Logged in, hello " + userFromUsername.getUsername());
+            } else {
+                return ResponseEntity.badRequest().body("Password incorrect");
+            }
+        }
+
+        return ResponseEntity.badRequest().body("Email/username incorrect");
     }
 
     @PostMapping("/create-user")
-    User upsertUser(@RequestBody User newUser) {
+    ResponseEntity<String> upsertUser(@RequestBody User newUser) {
+
+        if (userRepository.findByUsername(newUser.getUsername()) != null) {
+            return ResponseEntity.badRequest().body("Username is Taken.");
+        }
+        if (userRepository.findByEmail(newUser.getEmail()) != null) {
+            return ResponseEntity.badRequest().body("Email is Taken");
+        }
+
         newUser.setId(null);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        return userRepository.save(newUser);
+        userRepository.save(newUser);
+
+        return ResponseEntity.ok("User Created");
     }
 
 }

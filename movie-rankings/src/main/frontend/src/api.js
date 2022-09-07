@@ -11,7 +11,8 @@ export default {
     },
 
     async login(emailOrUsername, password) {
-        return axios.post('');
+        return axios.get('http://localhost:8081/api/user/login?emailOrUsername=' + emailOrUsername + '&password=' + password)
+            .catch(function (error) {return error.response});
     }
 
 }
