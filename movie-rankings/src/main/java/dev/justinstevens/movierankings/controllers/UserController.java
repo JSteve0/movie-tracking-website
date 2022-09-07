@@ -1,5 +1,6 @@
 package dev.justinstevens.movierankings.controllers;
 
+import dev.justinstevens.movierankings.documents.Movie;
 import dev.justinstevens.movierankings.documents.User;
 import dev.justinstevens.movierankings.repositories.UserRepository;
 import org.springframework.http.ResponseEntity;
@@ -81,6 +82,36 @@ public class UserController {
         userRepository.save(newUser);
 
         return ResponseEntity.ok("User Created");
+    }
+
+    @PostMapping("/add-movies")
+    ResponseEntity<String> upsertMovie(
+            @RequestParam String username,
+            @RequestParam String password,
+            @RequestBody List<Movie> movies)
+    {
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            return ResponseEntity.badRequest().body("Unauthorized");
+        }
+
+        movies.forEach(movie -> {
+            movie.setId(null);
+            if (movie.getRating() == 0) {
+                movie.setRating(1000);
+            }
+        });
+        if (user.getMovies() == null) {
+            user.setMovies(movies);
+        } else {
+            user.getMovies().addAll(movies);
+        }
+        userRepository.save(user);
+        return ResponseEntity.ok("Movie(s) added");
     }
 
 }

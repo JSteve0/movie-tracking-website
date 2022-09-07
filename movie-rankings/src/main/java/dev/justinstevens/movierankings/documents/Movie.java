@@ -1,29 +1,27 @@
 package dev.justinstevens.movierankings.documents;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
-
-@Document
 public class Movie {
 
     @Id
     private String id;
 
     private String name;
-    private int rating;
+    private double rating;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private LocalDateTime dateWatched;
-
-    public Movie(String id, String name, int rating, LocalDateTime dateWatched) {
+    public Movie(String id, String name, double rating) {
         super();
         this.id = id;
         this.name = name;
         this.rating = rating;
-        this.dateWatched = dateWatched;
+    }
+
+    public Movie() {
+        super();
+        this.id = null;
+        this.name = null;
+        this.rating = 0;
     }
 
     public String getId() {
@@ -42,20 +40,12 @@ public class Movie {
         this.name = name;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
-    }
-
-    public LocalDateTime getDateWatched() {
-        return dateWatched;
-    }
-
-    public void setDate(LocalDateTime dateWatched) {
-        this.dateWatched = dateWatched;
     }
 
     @Override
@@ -64,7 +54,6 @@ public class Movie {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", rating=" + rating +
-                ", dateWatched='" + dateWatched + '\'' +
                 '}';
     }
 }

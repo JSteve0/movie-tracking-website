@@ -43,6 +43,7 @@
 
 <script>
   import api from '../api.js'
+  import store from "@/store/store";
 
   export default {
     data() {
@@ -68,9 +69,11 @@
         if (response.status !== 200) {
           console.log("error: " + response.data);
         } else {
-          console.log(response.data);
-          this.$loggedIn = true;
-          console.log(this.$loggedIn);
+          this.$root.$emit("showMessage", response.data, 3000);
+          store.state.user.loggedIn = true;
+          store.state.user.username = response.data.split(" ").pop();
+          store.state.user.password = this.password;
+          console.log(store.state.user);
           setTimeout(() => {
             this.redirect('/')
           }, 1000)

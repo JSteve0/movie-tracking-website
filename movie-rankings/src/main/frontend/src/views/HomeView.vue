@@ -8,7 +8,7 @@
       <v-card-actions>
         <v-row justify="center">
           <v-btn
-              v-if="this.$loggedIn===false"
+              v-if="this.loggedIn===false"
               large
               width="200px"
               class="mb-5"
@@ -16,7 +16,7 @@
           >Login</v-btn>
 
           <v-btn
-              v-if="this.$loggedIn===false"
+              v-if="this.loggedIn===false"
               large
               width="200px"
               class="mb-5"
@@ -24,7 +24,7 @@
           >Create Account</v-btn>
 
           <v-btn
-              v-if="this.$loggedIn===true"
+              v-if="this.loggedIn===true"
               large
               width="200px"
               class="mb-5"
@@ -44,6 +44,14 @@
               class="mb-5"
               @click="redirect('/changelog')"
           >Changelog</v-btn>
+
+          <v-btn
+              v-if="this.loggedIn===true"
+              large
+              width="200px"
+              class="mb-5"
+              @click="logout()"
+          >Logout</v-btn>
         </v-row>
 
       </v-card-actions>
@@ -53,14 +61,31 @@
 </template>
 
 <script>
+  import store from "../store/store";
+
   export default {
     created() {
       document.title = "movie-rankings"
     },
 
+    computed: {
+      loggedIn() {
+        return store.state.user.loggedIn;
+      }
+    },
+
     methods: {
       redirect(link) {
         this.$router.push(link);
+      },
+
+      logout() {
+        store.state.user.username = "";
+        store.state.user.password = "";
+        store.state.user.jwt = "";
+        store.state.user.email = "";
+        store.state.user.movies = [];
+        store.state.user.loggedIn = false;
       }
     }
   }

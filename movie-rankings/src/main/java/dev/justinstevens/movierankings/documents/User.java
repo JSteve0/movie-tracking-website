@@ -1,7 +1,6 @@
 package dev.justinstevens.movierankings.documents;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -16,7 +15,6 @@ public class User {
     private String password;
     private String email;
 
-    @DBRef
     private List<Movie> movies;
 
     public User(String id, String username, String password, String email, List<Movie> movies) {
