@@ -1,7 +1,7 @@
 <template>
   <v-layout justify-center align-center>
     <v-card justify="center" width="250px">
-      <v-card-title class="justify-center mb-5">
+      <v-card-title class="justify-center mb-5 color:color='#1DB954'">
         movie-rankings
       </v-card-title>
 

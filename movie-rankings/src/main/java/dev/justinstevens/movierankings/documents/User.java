@@ -1,6 +1,8 @@
 package dev.justinstevens.movierankings.documents;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -11,8 +13,10 @@ public class User {
     @Id
     private String id;
 
+    @Indexed(unique = true)
     private String username;
     private String password;
+    @Indexed(unique = true)
     private String email;
 
     private List<Movie> movies;
@@ -81,4 +85,8 @@ public class User {
                 '}';
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

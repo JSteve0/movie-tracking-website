@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.util.List;
 
 @RestController
@@ -43,28 +44,22 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    ResponseEntity<String> login(
-            @RequestParam String emailOrUsername,
+    User login(
+            @RequestParam String email,
             @RequestParam String password)
     {
-        User userFromEmail = userRepository.findByEmail(emailOrUsername);
-        User userFromUsername = userRepository.findByUsername(emailOrUsername);
+        User user = userRepository.findByEmail(email);
 
-        if (userFromEmail != null) {
-            if (passwordEncoder.matches(password, userFromEmail.getPassword())) {
-                return ResponseEntity.ok("Logged in, hello " + userFromEmail.getUsername());
+        if (user != null) {
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                user.setPassword(null);
+                return user;
             } else {
-                return ResponseEntity.badRequest().body("Password incorrect");
-            }
-        } else if (userFromUsername != null) {
-            if (passwordEncoder.matches(password, userFromUsername.getPassword())) {
-                return ResponseEntity.ok("Logged in, hello " + userFromUsername.getUsername());
-            } else {
-                return ResponseEntity.badRequest().body("Password incorrect");
+                return null;
             }
         }
 
-        return ResponseEntity.badRequest().body("Email/username incorrect");
+        return null;
     }
 
     @PostMapping("/create-user")
@@ -86,11 +81,11 @@ public class UserController {
 
     @PostMapping("/add-movies")
     ResponseEntity<String> upsertMovie(
-            @RequestParam String username,
+            @RequestParam String email,
             @RequestParam String password,
             @RequestBody List<Movie> movies)
     {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByEmail(email);
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User not found");
@@ -100,10 +95,10 @@ public class UserController {
         }
 
         movies.forEach(movie -> {
-            movie.setId(null);
             if (movie.getRating() == 0) {
                 movie.setRating(1000);
             }
+            movie.setId(Integer.toString(movie.hashCode()));
         });
         if (user.getMovies() == null) {
             user.setMovies(movies);

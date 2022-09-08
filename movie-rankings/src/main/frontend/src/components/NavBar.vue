@@ -1,6 +1,6 @@
 <template>
-  <v-card>
-    <v-toolbar>
+  <v-card color="#1DB954">
+    <v-toolbar color="#1DB954">
       <v-toolbar-title>movie-rankings</v-toolbar-title>
       <v-icon class="ml-3">mdi-movie</v-icon>
 

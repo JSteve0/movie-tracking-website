@@ -18,7 +18,10 @@
         <v-text-field
             v-model="email"
             label="Email"
-            :rules="[() => !!email || 'This field is required']"
+            :rules="[
+                () => !!email || 'This field is required',
+                v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
+            ]"
             outlined
             class="mx-5"
         >
@@ -56,6 +59,7 @@
               large
               class="mb-5"
               :disabled="checkFields"
+              color="#1DB954"
               @click="createAccount()"
           >Create Account</v-btn>
         </v-row>
@@ -89,7 +93,8 @@
                 this.email !== "" &&
                 this.password !== "" &&
                 this.confirmPassword !== "" &&
-                this.password === this.confirmPassword);
+                this.password === this.confirmPassword &&
+                /.+@.+\..+/.test(this.email));
       }
     },
 

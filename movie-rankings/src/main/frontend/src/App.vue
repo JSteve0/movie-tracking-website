@@ -32,8 +32,8 @@ import NavBar from "@/components/NavBar";
 export default {
   components: {NavBar},
   data: () => ({
-    snackbar: true,
-    snackbarMessage: 'My timeout is set to 2000.',
+    snackbar: false,
+    snackbarMessage: '',
     timeout: 2000,
   }),
 
@@ -42,6 +42,11 @@ export default {
       this.snackbar = false;
       this.snackbarMessage = snackbarMessage;
       this.timeout = duration;
+      this.snackbar = true;
+    }),
+    this.$root.$on("showMessage", (snackbarMessage) => {
+      this.snackbar = false;
+      this.snackbarMessage = snackbarMessage;
       this.snackbar = true;
     })
   }

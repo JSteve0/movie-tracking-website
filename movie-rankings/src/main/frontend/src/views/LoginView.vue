@@ -31,12 +31,12 @@
             large
             class="mb-5"
             :disabled="checkFields"
+            color="#1DB954"
             @click="login()"
           >Login</v-btn>
         </v-row>
 
       </v-card-actions>
-
     </v-card>
   </v-layout>
 </template>
@@ -53,10 +53,6 @@
       }
     },
 
-    created() {
-
-    },
-
     computed: {
       checkFields() {
         return !(this.email !== "" && this.password !== "");
@@ -67,12 +63,19 @@
       async login() {
         let response = await api.login(this.email, this.password);
         if (response.status !== 200) {
-          console.log("error: " + response.data);
+          console.log("Error");
+          this.$root.$emit("showMessage", "Error", 3000);
+        } else if (response.data === null || response.data === "") {
+          console.log("Username and/or password is incorrect");
+          this.$root.$emit("showMessage", "Username and/or password is incorrect", 3000);
         } else {
-          this.$root.$emit("showMessage", response.data, 3000);
+          let user = response.data;
+          this.$root.$emit("showMessage", "Logged in. Welcome " + user.username + "!", 3000);
           store.state.user.loggedIn = true;
-          store.state.user.username = response.data.split(" ").pop();
+          store.state.user.username = user.username;
           store.state.user.password = this.password;
+          store.state.user.movies = user.movies;
+          store.state.user.email = user.email;
           console.log(store.state.user);
           setTimeout(() => {
             this.redirect('/')
